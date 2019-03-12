@@ -55,7 +55,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Services\FileHash.cs" />
+    <Compile Include="Interfaces\IFileHashService.cs" />
+    <Compile Include="Models\DiffResult.cs" />
+    <Compile Include="Models\FileMetadataCollection.cs" />
+    <Compile Include="Models\FileMetadata.cs" />
+    <Compile Include="Services\FileListDiffService.cs" />
+    <Compile Include="Services\FileHashService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSynchronizer", "FileSynchronizer\FileSynchronizer.csproj", "{3A576351-F6E9-47AC-95B8-34421EC6866E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSynchronizer.Test", "FileSynchronizer.Test\FileSynchronizer.Test.csproj", "{60204C30-E522-46C1-9908-9EE78BED777B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3A576351-F6E9-47AC-95B8-34421EC6866E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A576351-F6E9-47AC-95B8-34421EC6866E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A576351-F6E9-47AC-95B8-34421EC6866E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60204C30-E522-46C1-9908-9EE78BED777B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60204C30-E522-46C1-9908-9EE78BED777B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60204C30-E522-46C1-9908-9EE78BED777B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60204C30-E522-46C1-9908-9EE78BED777B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

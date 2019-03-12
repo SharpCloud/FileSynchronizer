@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FileSynchronizer.Services
 {
-    public class FileHash
+    public class FileHashService
     {
         public string ComputeHash(string filepath)
         {
