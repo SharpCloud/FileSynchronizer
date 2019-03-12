@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace FileSynchronizer.Services
 {
-    public class FileListDiffService
+    public class FileListDiffService : IFileListDiffService
     {
         private readonly IFileHashService _fileHashService;
 
@@ -23,22 +23,34 @@ namespace FileSynchronizer.Services
 
             foreach (var file in filesInDirectory)
             {
+                var hash = _fileHashService.ComputeHash(file);
                 var existing = lastRun.SingleOrDefault(m => m.Name == file);
+
+                var metadata = new FileMetadata
+                {
+                    Hash = hash,
+                    Name = file
+                };
+
                 if (existing == null)
                 {
-                    diff.Added.Add(file);
+                    diff.Added.Add(metadata);
                 }
-                else
+                else if (hash != existing.Hash)
                 {
-                    var hash = _fileHashService.ComputeHash(file);
-                    if (hash != existing.Hash)
-                    {
-                        diff.Modified.Add(file);
-                    }
+                    diff.Modified.Add(metadata);
                 }
             }
 
             return diff;
+        }
+
+        public FileMetadataCollection Apply(DiffResult delta, IList<FileMetadata> target)
+        {
+            return new FileMetadataCollection
+            {
+                Files = (List<FileMetadata>)target
+            };
         }
     }
 }

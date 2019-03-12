@@ -4,6 +4,6 @@ namespace FileSynchronizer.Models
 {
     public class FileMetadataCollection
     {
-        public List<FileMetadata> Files { get; set; }
+        public List<FileMetadata> Files { get; set; } = new List<FileMetadata>();
     }
 }

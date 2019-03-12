@@ -1,10 +1,11 @@
-﻿using System.IO;
+﻿using FileSynchronizer.Interfaces;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace FileSynchronizer.Services
 {
-    public class FileHashService
+    public class FileHashService : IFileHashService
     {
         public string ComputeHash(string filepath)
         {

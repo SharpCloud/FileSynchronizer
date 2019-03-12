@@ -17,6 +17,7 @@ namespace FileSynchronizer.Test
 
             const string file1 = "File1";
             const string file2 = "File2";
+            const string file2Hash = "File2Hash";
 
             var filesInDirectory = new[] { file1, file2 };
 
@@ -28,7 +29,9 @@ namespace FileSynchronizer.Test
                 }
             };
 
-            var hashService = Mock.Of<IFileHashService>();
+            var hashService = Mock.Of<IFileHashService>(s =>
+                s.ComputeHash(file2) == file2Hash);
+
             var diff = new FileListDiffService(hashService);
 
             // Act
@@ -38,7 +41,8 @@ namespace FileSynchronizer.Test
             // Assert
 
             Assert.AreEqual(1, result.Added.Count);
-            Assert.AreEqual(file2, result.Added[0]);
+            Assert.AreEqual(file2Hash, result.Added[0].Hash);
+            Assert.AreEqual(file2, result.Added[0].Name);
             Assert.IsEmpty(result.Modified);
             Assert.IsEmpty(result.Removed);
         }
@@ -51,12 +55,13 @@ namespace FileSynchronizer.Test
             const string file1 = "File1";
             const string file1Hash = "File1Hash";
             const string file2 = "File2";
+            const string file2ModifiedHash= "File2ModifiedHash";
 
             var filesInDirectory = new[] { file1, file2 };
 
             var hashService = Mock.Of<IFileHashService>(s =>
                 s.ComputeHash(file1) == file1Hash &&
-                s.ComputeHash(file2) == "Modified Hash");
+                s.ComputeHash(file2) == file2ModifiedHash);
 
             var lastRun = new FileMetadataCollection
             {
@@ -85,7 +90,8 @@ namespace FileSynchronizer.Test
 
             Assert.IsEmpty(result.Added);
             Assert.AreEqual(1, result.Modified.Count);
-            Assert.AreEqual(file2, result.Modified[0]);
+            Assert.AreEqual(file2ModifiedHash, result.Modified[0].Hash);
+            Assert.AreEqual(file2, result.Modified[0].Name);
             Assert.IsEmpty(result.Removed);
         }
 
