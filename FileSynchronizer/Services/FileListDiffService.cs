@@ -47,10 +47,44 @@ namespace FileSynchronizer.Services
 
         public FileMetadataCollection Apply(DiffResult delta, IList<FileMetadata> target)
         {
-            return new FileMetadataCollection
+            var metadataList = new List<FileMetadata>();
+
+            foreach (var metadata in target)
             {
-                Files = (List<FileMetadata>)target
+                var add = !delta.Removed.Contains(metadata.Name);
+
+                if (add)
+                {
+                    var modified = delta.Modified.SingleOrDefault(m =>
+                        m.Name == metadata.Name);
+
+                    var hash = modified == null
+                        ? metadata.Hash
+                        : modified.Hash;
+
+                    metadataList.Add(new FileMetadata
+                    {
+                        Hash = hash,
+                        Name = metadata.Name
+                    });
+                }
+            }
+
+            foreach (var metadata in delta.Added)
+            {
+                metadataList.Add(new FileMetadata
+                {
+                    Hash = metadata.Hash,
+                    Name = metadata.Name
+                });
+            }
+
+            var collection = new FileMetadataCollection
+            {
+                Files = metadataList.OrderBy(m => m.Name).ToList()
             };
+
+            return collection;
         }
     }
 }
