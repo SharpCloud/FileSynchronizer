@@ -63,6 +63,7 @@
     </ApplicationDefinition>
     <Compile Include="Interfaces\IFileListDiffService.cs" />
     <Compile Include="Interfaces\IFileHashService.cs" />
+    <Compile Include="Interfaces\ITimeProvider.cs" />
     <Compile Include="Ioc\IocBindings.cs" />
     <Compile Include="Ioc\NinjectKernelFactory.cs" />
     <Compile Include="Models\DiffResult.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Services\DirectoryDiffService.cs" />
     <Compile Include="Services\FileListDiffService.cs" />
     <Compile Include="Services\FileHashService.cs" />
+    <Compile Include="Services\TimeProvider.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

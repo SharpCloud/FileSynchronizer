@@ -8,10 +8,14 @@ namespace FileSynchronizer.Services
     public class FileListDiffService : IFileListDiffService
     {
         private readonly IFileHashService _fileHashService;
+        private readonly ITimeProvider _timeProvider;
 
-        public FileListDiffService(IFileHashService fileHashService)
+        public FileListDiffService(
+            IFileHashService fileHashService,
+            ITimeProvider timeProvider)
         {
             _fileHashService = fileHashService;
+            _timeProvider = timeProvider;
         }
 
         public DiffResult Compare(IList<string> filesInDirectory, IList<FileMetadata> lastRun)
@@ -81,7 +85,8 @@ namespace FileSynchronizer.Services
 
             var collection = new FileMetadataCollection
             {
-                Files = metadataList.OrderBy(m => m.Name).ToList()
+                Files = metadataList.OrderBy(m => m.Name).ToList(),
+                LastUpdated = _timeProvider.UtcNow
             };
 
             return collection;

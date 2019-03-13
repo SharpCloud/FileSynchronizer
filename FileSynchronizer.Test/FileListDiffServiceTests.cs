@@ -3,6 +3,7 @@ using FileSynchronizer.Models;
 using FileSynchronizer.Services;
 using Moq;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace FileSynchronizer.Test
@@ -34,7 +35,9 @@ namespace FileSynchronizer.Test
                 var hashService = Mock.Of<IFileHashService>(s =>
                     s.ComputeHash(file2) == file2Hash);
 
-                var diff = new FileListDiffService(hashService);
+                var diff = new FileListDiffService(
+                    hashService,
+                    Mock.Of<ITimeProvider>());
 
                 // Act
 
@@ -82,7 +85,9 @@ namespace FileSynchronizer.Test
                 }
                 };
 
-                var diff = new FileListDiffService(hashService);
+                var diff = new FileListDiffService(
+                    hashService,
+                    Mock.Of<ITimeProvider>());
 
                 // Act
 
@@ -110,14 +115,15 @@ namespace FileSynchronizer.Test
                 var lastRun = new FileMetadataCollection
                 {
                     Files = new List<FileMetadata>
-                {
-                    new FileMetadata { Name = file1 },
-                    new FileMetadata { Name = file2 }
-                }
+                    {
+                        new FileMetadata { Name = file1 },
+                        new FileMetadata { Name = file2 }
+                    }
                 };
 
-                var hashService = Mock.Of<IFileHashService>();
-                var diff = new FileListDiffService(hashService);
+                var diff = new FileListDiffService(
+                    Mock.Of<IFileHashService>(),
+                    Mock.Of<ITimeProvider>());
 
                 // Act
 
@@ -165,8 +171,9 @@ namespace FileSynchronizer.Test
                     }
                 };
 
-                var hashService = Mock.Of<IFileHashService>();
-                var diff = new FileListDiffService(hashService);
+                var diff = new FileListDiffService(
+                    Mock.Of<IFileHashService>(),
+                    Mock.Of<ITimeProvider>());
 
                 // Act
 
@@ -220,8 +227,9 @@ namespace FileSynchronizer.Test
                     }
                 };
 
-                var hashService = Mock.Of<IFileHashService>();
-                var diff = new FileListDiffService(hashService);
+                var diff = new FileListDiffService(
+                    Mock.Of<IFileHashService>(),
+                    Mock.Of<ITimeProvider>());
 
                 // Act
 
@@ -268,8 +276,9 @@ namespace FileSynchronizer.Test
                     }
                 };
 
-                var hashService = Mock.Of<IFileHashService>();
-                var diff = new FileListDiffService(hashService);
+                var diff = new FileListDiffService(
+                    Mock.Of<IFileHashService>(),
+                    Mock.Of<ITimeProvider>());
 
                 // Act
 
@@ -281,6 +290,66 @@ namespace FileSynchronizer.Test
 
                 Assert.AreEqual(file2, result.Files[0].Name);
                 Assert.AreEqual(file2Hash, result.Files[0].Hash);
+            }
+
+            [Test]
+            public void UnmodifiedFilesAreAdded()
+            {
+                // Arrange
+
+                const string file1 = "File1";
+                const string file1Hash = "File1Hash";
+
+                var delta = new DiffResult();
+
+                var target = new List<FileMetadata>
+                {
+                    new FileMetadata
+                    {
+                        Hash = file1Hash,
+                        Name = file1
+                    }
+                };
+
+                var diff = new FileListDiffService(
+                    Mock.Of<IFileHashService>(),
+                    Mock.Of<ITimeProvider>());
+
+                // Act
+
+                var result = diff.Apply(delta, target);
+
+                // Assert
+
+                Assert.AreEqual(1, result.Files.Count);
+
+                Assert.AreEqual(file1, result.Files[0].Name);
+                Assert.AreEqual(file1Hash, result.Files[0].Hash);
+            }
+
+            [Test]
+            public void TimestampIsSet()
+            {
+                // Arrange
+
+                var now = new DateTime(2019, 3, 13, 11, 30, 0);
+                var delta = new DiffResult();
+                var target = new List<FileMetadata>();
+
+                var timeProvider = Mock.Of<ITimeProvider>(t =>
+                    t.UtcNow == now);
+
+                var diff = new FileListDiffService(
+                    Mock.Of<IFileHashService>(),
+                    timeProvider);
+
+                // Act
+
+                var result = diff.Apply(delta, target);
+
+                // Assert
+
+                Assert.AreEqual(now, result.LastUpdated);
             }
         }
     }

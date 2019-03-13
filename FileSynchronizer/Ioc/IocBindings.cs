@@ -10,6 +10,7 @@ namespace FileSynchronizer.Ioc
         {
             Kernel.Bind<IFileListDiffService>().To<FileListDiffService>();
             Kernel.Bind<IFileHashService>().To<FileHashService>();
+            Kernel.Bind<ITimeProvider>().To<TimeProvider>();
         }
     }
 }
