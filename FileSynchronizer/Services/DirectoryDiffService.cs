@@ -33,7 +33,10 @@ namespace FileSynchronizer.Services
                 lastRun = new FileMetadataCollection();
             }
 
-            var filelist = Directory.EnumerateFiles(directoryPath).ToList();
+            var filelist = Directory.EnumerateFiles(directoryPath)
+                .Where(f => !f.EndsWith(LastRunDataFileName))
+                .ToList();
+
             var delta = _fileListDiffService.Compare(filelist, lastRun.Files);
             var updated = _fileListDiffService.Apply(delta, lastRun.Files);
             var updatedJson = JsonConvert.SerializeObject(updated);
